@@ -7,14 +7,24 @@ export default function Clone() {
     const [loading, setLoading] = useState(false);
     const handleSubmit = async (e) => {
         let openAiKey = localStorage.getItem("openAiKey");
+        let productUrl = localStorage.getItem("url");
+        let productDescription = localStorage.getItem("productDescription");
         if (!openAiKey) {
             alert("Please save your OpenAI API key first!");
+            return;
+        }
+        if (!productUrl || !productDescription) {
+            alert("Please save your product URL and description first!");
             return;
         }
         e.preventDefault();
         setLoading(true);
         setTranscript("");
-        const transcript = await getSocialMedia(url);
+        const transcript = await getSocialMedia(
+            url,
+            productUrl,
+            productDescription
+        );
         setTranscript(transcript);
         setLoading(false);
         console.log(transcript);

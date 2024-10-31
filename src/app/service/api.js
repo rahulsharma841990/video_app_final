@@ -6,7 +6,7 @@ import {
     rapidApiHost,
 } from "./Config";
 
-export const getSocialMedia = async (url) => {
+export const getSocialMedia = async (url, productUrl, productDescription) => {
     const options = {
         method: "GET",
         url: socialMediaUrl,
@@ -23,7 +23,11 @@ export const getSocialMedia = async (url) => {
     const videoLink = response.data.links[0].link;
     await downloadVideo(videoLink);
     const responseTransscript = await axios.get(`${backendUrl}/transcript`, {
-        params: { openAiKey: localStorage.getItem("openAiKey") },
+        params: {
+            openAiKey: localStorage.getItem("openAiKey"),
+            productUrl: productUrl,
+            productDescription: productDescription,
+        },
     });
     return responseTransscript.data.transcription;
 };
