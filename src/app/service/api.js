@@ -22,7 +22,9 @@ export const getSocialMedia = async (url) => {
     const response = await axios.request(options);
     const videoLink = response.data.links[0].link;
     await downloadVideo(videoLink);
-    const responseTransscript = await axios.get(`${backendUrl}/transcript`);
+    const responseTransscript = await axios.get(`${backendUrl}/transcript`, {
+        params: { openAiKey: localStorage.getItem("openAiKey") },
+    });
     return responseTransscript.data.transcription;
 };
 

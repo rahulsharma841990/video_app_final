@@ -6,6 +6,11 @@ export default function Clone() {
     const [transcript, setTranscript] = useState("");
     const [loading, setLoading] = useState(false);
     const handleSubmit = async (e) => {
+        let openAiKey = localStorage.getItem("openAiKey");
+        if (!openAiKey) {
+            alert("Please save your OpenAI API key first!");
+            return;
+        }
         e.preventDefault();
         setLoading(true);
         setTranscript("");
