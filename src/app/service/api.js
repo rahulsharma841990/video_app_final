@@ -6,7 +6,13 @@ import {
     rapidApiHost,
 } from "./Config";
 
-export const getSocialMedia = async (url, productUrl, productDescription) => {
+export const getSocialMedia = async (
+    url,
+    productUrl,
+    productDescription,
+    prompt,
+    gptModel
+) => {
     const options = {
         method: "GET",
         url: socialMediaUrl,
@@ -27,6 +33,8 @@ export const getSocialMedia = async (url, productUrl, productDescription) => {
             openAiKey: localStorage.getItem("openAiKey"),
             productUrl: productUrl,
             productDescription: productDescription,
+            prompt: prompt,
+            gptModel: gptModel,
         },
     });
     return responseTransscript.data.transcription;

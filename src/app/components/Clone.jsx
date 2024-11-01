@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getSocialMedia } from "../service/api";
 export default function Clone() {
     const [url, setUrl] = useState("");
@@ -9,6 +9,8 @@ export default function Clone() {
         let openAiKey = localStorage.getItem("openAiKey");
         let productUrl = localStorage.getItem("url");
         let productDescription = localStorage.getItem("productDescription");
+        let prompt = localStorage.getItem("prompt");
+        let gptModel = localStorage.getItem("gptModel");
         if (!openAiKey) {
             alert("Please save your OpenAI API key first!");
             return;
@@ -17,18 +19,38 @@ export default function Clone() {
             alert("Please save your product URL and description first!");
             return;
         }
+        if (!prompt) {
+            alert("Please save your prompt first!");
+            return;
+        }
+        if (!gptModel) {
+            alert("Please save your GPT model first!");
+            return;
+        }
+        if (!url) {
+            alert("Please enter a URL first!");
+            return;
+        }
         e.preventDefault();
         setLoading(true);
         setTranscript("");
         const transcript = await getSocialMedia(
             url,
             productUrl,
-            productDescription
+            productDescription,
+            prompt,
+            gptModel
         );
-        setTranscript(transcript);
+        setTranscript(
+            transcript
+                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold formatting
+                .replace(/Step (\d+):/g, "<br/><strong>Step $1:</strong>") // Step formatting
+                .replace(/\n/g, "<br/>") // New line to <br/>
+        );
         setLoading(false);
         console.log(transcript);
     };
+
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-center">
@@ -57,7 +79,11 @@ export default function Clone() {
             </form>
             <div className="space-y-2">
                 <h3 className="text-xl font-semibold">Transcript</h3>
-                <p className="text-gray-600">{transcript}</p>
+
+                <div
+                    className="prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: transcript }}
+                />
             </div>
         </div>
     );
